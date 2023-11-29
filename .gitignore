@@ -3,4 +3,6 @@
 /local-config.properties
 /local-boot.properties
 /build.properties
+/resources
+run.bat
 *~
