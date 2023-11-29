@@ -216,65 +216,109 @@ public class Window extends Widget implements DTarget {
 	}
 
 	public void drawbg(GOut g) {
-	    Coord bgc = new Coord();
-	    for(bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bg.sz().y) {
-		for(bgc.x = ca.ul.x; bgc.x < ca.br.x; bgc.x += bg.sz().x)
-		    g.image(bg, bgc, ca.ul, ca.br);
-	    }
-	    bgc.x = ca.ul.x;
-	    for(bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bgl.sz().y)
-		g.image(bgl, bgc, ca.ul, ca.br);
-	    bgc.x = ca.br.x - bgr.sz().x;
-	    for(bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bgr.sz().y)
-		g.image(bgr, bgc, ca.ul, ca.br);
+		// Initialize a coordinate for iterating through the background tiles
+		Coord bgc = new Coord();
+	
+		// Draw the background tiles horizontally and vertically within the content area
+		for (bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bg.sz().y) {
+			for (bgc.x = ca.ul.x; bgc.x < ca.br.x; bgc.x += bg.sz().x)
+				g.image(bg, bgc, ca.ul, ca.br);
+				
+		}
+		// Draw the left vertical border (`bgl`) within the content area
+		bgc.x = ca.ul.x;
+		for (bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bgl.sz().y)
+			g.image(bgl, bgc, ca.ul, ca.br);
+	
+		// Draw the right vertical border (`bgr`) within the content area
+		bgc.x = ca.br.x - bgr.sz().x;
+		for (bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bgr.sz().y)
+			g.image(bgr, bgc, ca.ul, ca.br);
 	}
 
 	protected void drawframe(GOut g) {
-	    Window wnd = (Window)parent;
-	    if((cap == null) || (cap.text != wnd.cap)) {
-		cap = (wnd.cap == null) ? null : cf.render(wnd.cap);
-		cmw = (cap == null) ? 0 : cap.sz().x;
-		cmw = Math.max(cmw, this.sz.x / 4);
-		cptl = Coord.of(ca.ul.x, 0);
-		cpsz = Coord.of(cpo.x + cmw, cm.sz().y).sub(cptl);
-		cmw = cmw - (cl.sz().x - cpo.x) - UI.scale(5);
-	    }
-	    if(dragsize)
-		g.image(sizer, ca.br.sub(sizer.sz()));
-	    Coord mdo, cbr;
-	    g.image(cl, Coord.z);
-	    mdo = Coord.of(cl.sz().x, 0);
-	    cbr = mdo.add(cmw, cm.sz().y);
-	    for(int x = 0; x < cmw; x += cm.sz().x)
-		g.image(cm, mdo.add(x, 0), Coord.z, cbr);
-	    g.image(cr, Coord.of(cl.sz().x + cmw, 0));
-	    g.image(cap.tex(), cpo);
-	    mdo = Coord.of(cl.sz().x + cmw + cr.sz().x, 0);
-	    cbr = Coord.of(sz.x - tr.sz().x, tm.sz().y);
-	    for(; mdo.x < cbr.x; mdo.x += tm.sz().x)
-		g.image(tm, mdo, Coord.z, cbr);
-	    g.image(tr, Coord.of(sz.x - tr.sz().x, 0));
-
-	    mdo = Coord.of(0, cl.sz().y);
-	    cbr = Coord.of(lm.sz().x, sz.y - bl.sz().y);
-	    if(cbr.y - mdo.y >= lb.sz().y) {
-		cbr.y -= lb.sz().y;
-		g.image(lb, Coord.of(0, cbr.y));
-	    }
-	    for(; mdo.y < cbr.y; mdo.y += lm.sz().y)
-		g.image(lm, mdo, Coord.z, cbr);
-
-	    mdo = Coord.of(sz.x - rm.sz().x, tr.sz().y);
-	    cbr = Coord.of(sz.x, sz.y - br.sz().y);
-	    for(; mdo.y < cbr.y; mdo.y += rm.sz().y)
-		g.image(rm, mdo, Coord.z, cbr);
-
-	    g.image(bl, Coord.of(0, sz.y - bl.sz().y));
-	    mdo = Coord.of(bl.sz().x, sz.y - bm.sz().y);
-	    cbr = Coord.of(sz.x - br.sz().x, sz.y);
-	    for(; mdo.x < cbr.x; mdo.x += bm.sz().x)
-		g.image(bm, mdo, Coord.z, cbr);
-	    g.image(br, sz.sub(br.sz()));
+		// Get the parent window
+		Window wnd = (Window) parent;
+	
+		// Initialize variables related to the window caption
+		// Render the caption if it has changed
+		// Set up the sizes and positions of caption-related elements
+		// (e.g., left and right components of the caption)
+		if ((cap == null) || (cap.text != wnd.cap)) {
+			cap = (wnd.cap == null) ? null : cf.render(wnd.cap);
+			cmw = (cap == null) ? 0 : cap.sz().x;
+			cmw = Math.max(cmw, this.sz.x / 4);
+			cptl = Coord.of(ca.ul.x, 0);
+			cpsz = Coord.of(cpo.x + cmw, cm.sz().y).sub(cptl);
+			cmw = cmw - (cl.sz().x - cpo.x) - UI.scale(5);
+		}
+	
+		// Check if the window is in dragsize mode and draw the size indicator
+		if (dragsize)
+			g.image(sizer, ca.br.sub(sizer.sz()));
+	
+		// Set up coordinates and dimensions for drawing different frame elements
+		Coord mdo, cbr;
+	
+		// Draw the left frame
+		g.image(cl, Coord.z);
+	
+		// Draw the center frames horizontally
+		mdo = Coord.of(cl.sz().x, 0);
+		cbr = mdo.add(cmw, cm.sz().y);
+		for (int x = 0; x < cmw; x += cm.sz().x)
+			g.image(cm, mdo.add(x, 0), Coord.z, cbr);
+	
+		// Draw the right frame
+		g.image(cr, Coord.of(cl.sz().x + cmw, 0));
+	
+		// Draw the caption texture
+		g.image(cap.tex(), cpo);
+	
+		// Set up coordinates and dimensions for drawing top frame elements
+		mdo = Coord.of(cl.sz().x + cmw + cr.sz().x, 0);
+		cbr = Coord.of(sz.x - tr.sz().x, tm.sz().y);
+	
+		// Draw the top frames horizontally
+		for (; mdo.x < cbr.x; mdo.x += tm.sz().x)
+			g.image(tm, mdo, Coord.z, cbr);
+	
+		// Draw the right frame
+		g.image(tr, Coord.of(sz.x - tr.sz().x, 0));
+	
+		// Set up coordinates and dimensions for drawing left frame elements
+		mdo = Coord.of(0, cl.sz().y);
+		cbr = Coord.of(lm.sz().x, sz.y - bl.sz().y);
+	
+		// Draw the left and bottom frames vertically
+		if (cbr.y - mdo.y >= lb.sz().y) {
+			cbr.y -= lb.sz().y;
+			g.image(lb, Coord.of(0, cbr.y));
+		}
+		for (; mdo.y < cbr.y; mdo.y += lm.sz().y)
+			g.image(lm, mdo, Coord.z, cbr);
+	
+		// Set up coordinates and dimensions for drawing right frame elements
+		mdo = Coord.of(sz.x - rm.sz().x, tr.sz().y);
+		cbr = Coord.of(sz.x, sz.y - br.sz().y);
+		
+		// Draw the right frame vertically
+		for (; mdo.y < cbr.y; mdo.y += rm.sz().y)
+			g.image(rm, mdo, Coord.z, cbr);
+	
+		// Draw the bottom frame
+		g.image(bl, Coord.of(0, sz.y - bl.sz().y));
+	
+		// Set up coordinates and dimensions for drawing bottom frame elements
+		mdo = Coord.of(bl.sz().x, sz.y - bm.sz().y);
+		cbr = Coord.of(sz.x - br.sz().x, sz.y);
+	
+		// Draw the bottom frames horizontally
+		for (; mdo.x < cbr.x; mdo.x += bm.sz().x)
+			g.image(bm, mdo, Coord.z, cbr);
+	
+		// Draw the right bottom corner frame
+		g.image(br, sz.sub(br.sz()));
 	}
 
 	public void draw(GOut g) {
