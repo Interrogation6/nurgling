@@ -39,7 +39,7 @@ public class Button extends SIWidget {
     public static final BufferedImage dt = Resource.loadsimg("nurgling/hud/buttons/tbtn/dtex");
     public static final BufferedImage ut = Resource.loadsimg("nurgling/hud/buttons/tbtn/utex");
     public static final BufferedImage bm = Resource.loadsimg("nurgling/hud/buttons/tbtn/mid");
-    public static final int hs = bl.getHeight(), hl = bm.getHeight();
+    public static final int hs = UI.scale(25), hl = bm.getHeight();
     public static final Resource click = Loading.waitfor(Resource.local().load("sfx/hud/btn"));
     public static final Audio.Clip clbtdown = Loading.waitfor(Resource.local().load("sfx/hud/lbtn")).layer(Resource.audio, "down");
     public static final Audio.Clip clbtup = Loading.waitfor(Resource.local().load("sfx/hud/lbtn")).layer(Resource.audio, "up");
@@ -123,17 +123,20 @@ public class Button extends SIWidget {
 	Graphics g = img.getGraphics();
 	int yo = lg?((hl - hs) / 2):0;
 
-	g.drawImage(a?dt:ut, UI.scale(4), yo + UI.scale(4), sz.x - UI.scale(8), hs - UI.scale(8), null);
+    g.setColor(new Color(20,20,20,a?150:200));
+    g.fillRect(UI.scale(4), yo + UI.scale(4),sz.x-UI.scale(8),hs);
+	//g.drawImage(ut, UI.scale(4), yo + UI.scale(4), sz.x - UI.scale(8), hs - UI.scale(8), null);
+
 
 	Coord tc = sz.sub(Utils.imgsz(cont)).div(2);
 	if(a)
 	    tc = tc.add(UI.scale(1), UI.scale(1));
-	g.drawImage(cont, tc.x, tc.y, null);
+	g.drawImage(PUtils.monochromize(cont,Color.WHITE), tc.x, tc.y, null);
 
-	g.drawImage(bl, 0, yo, null);
-	g.drawImage(br, sz.x - br.getWidth(), yo, null);
-	g.drawImage(bt, bl.getWidth(), yo, sz.x - bl.getWidth() - br.getWidth(), bt.getHeight(), null);
-	g.drawImage(bb, bl.getWidth(), yo + hs - bb.getHeight(), sz.x - bl.getWidth() - br.getWidth(), bb.getHeight(), null);
+	//g.drawImage(bl, 0, yo, null);
+	//g.drawImage(br, sz.x - br.getWidth(), yo, null);
+	//g.drawImage(bt, bl.getWidth(), yo, sz.x - bl.getWidth() - br.getWidth(), bt.getHeight(), null);
+	//g.drawImage(bb, bl.getWidth(), yo + hs - bb.getHeight(), sz.x - bl.getWidth() - br.getWidth(), bb.getHeight(), null);
 	if(lg)
 	    g.drawImage(bm, (sz.x - bm.getWidth()) / 2, 0, null);
 

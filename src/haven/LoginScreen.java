@@ -60,9 +60,9 @@ public class LoginScreen extends Widget {
     public class Credbox extends Widget {
 	public final UserEntry user;
 	public final TextEntry pass;
-	private final CheckBox savetoken;
+	//private final CheckBox savetoken;
 	private final Button fbtn;
-	private final IButton exec;
+	private final Button exec;
 	private final Widget pwbox, tkbox;
 	private byte[] token = null;
 	private boolean inited = false;
@@ -79,7 +79,7 @@ public class LoginScreen extends Widget {
 
 	    protected void changed() {
 		checktoken();
-		savetoken.set(token != null);
+		//savetoken.set(token != null);
 	    }
 
 	    public void settext2(String text) {
@@ -117,18 +117,18 @@ public class LoginScreen extends Widget {
 	    super(UI.scale(200, 150));
 	    setfocustab(true);
 	    Widget prev = add(new Label("User name", textf), 0, 0);
-	    add(user = new UserEntry(this.sz.x), prev.pos("bl").adds(0, 1));
+	    add(user = new UserEntry(this.sz.x), prev.pos("bl").adds(0, 10));
 	    setfocus(user);
 
 	    add(pwbox = new Widget(Coord.z), user.pos("bl").adds(0, 10));
 	    pwbox.add(prev = new Label("Password", textf), Coord.z);
 	    pwbox.add(pass = new TextEntry(this.sz.x, ""), prev.pos("bl").adds(0, 1)).pw = true;
-	    pwbox.add(savetoken = new CheckBox("Remember me", true), pass.pos("bl").adds(0, 10));
-	    savetoken.setgkey(kb_savtoken);
-	    savetoken.settip("Saving your login does not save your password, but rather " +
+	    //pwbox.add(savetoken = new CheckBox("Remember me", true), pass.pos("bl").adds(0, 10));
+	    //savetoken.setgkey(kb_savtoken);
+	    /*savetoken.settip("Saving your login does not save your password, but rather " +
 			     "a randomly generated token that will be used to log in. " +
 			     "You can manage your saved tokens in your Account Settings.",
-			     true);
+			     true);*/
 	    pwbox.pack();
 	    pwbox.hide();
 
@@ -138,13 +138,13 @@ public class LoginScreen extends Widget {
 	    fbtn.setgkey(kb_deltoken);
 	    tkbox.pack();
 	    tkbox.hide();
-
-	    adda(exec = new IButton("nurgling/hud/buttons/login", "u", "d", "o") {
+		//new Button(UI.scale(100), "Options")
+	    adda(exec = new Button(UI.scale(100),"Login") {
 		    protected void depress() {ui.sfx(Button.clbtdown.stream());}
 		    protected void unpress() {ui.sfx(Button.clbtup.stream());}
 		    public void click() {enter();}
 		},
-		pos("cmid").y(Math.max(pwbox.pos("bl").y, tkbox.pos("bl").y)).adds(0, 35), 0.5, 0.0);
+		pos("cmid").y(Math.max(pwbox.pos("bl").y, tkbox.pos("bl").y)).adds(0, 5), 0.5, 0.0);
 	    pack();
 	}
 
@@ -174,7 +174,7 @@ public class LoginScreen extends Widget {
 	private void forget() {
 	    String nm = user.text();
 	    Bootstrap.settoken(nm, hostname, null);
-	    savetoken.set(false);
+	    //savetoken.set(false);
 	    checktoken();
 	}
 
@@ -184,7 +184,7 @@ public class LoginScreen extends Widget {
 	    } else if(pwbox.visible && pass.text().equals("")) {
 		setfocus(pass);
 	    } else {
-		LoginScreen.this.wdgmsg("login", creds(), pwbox.visible && savetoken.state());
+		LoginScreen.this.wdgmsg("login", creds(), pwbox.visible /*&& savetoken.state()*/);
 	    }
 	}
 
@@ -344,7 +344,7 @@ public class LoginScreen extends Widget {
     public void draw(GOut g) {
 	super.draw(g);
 	if(error != null)
-	    g.aimage(error.tex(), bgc.adds(0, 150), 0.5, 0.0);
+	    g.aimage(error.tex(), bgc.adds(0, 250), 0.5, 0.0);
 	if(progress != null)
 	    g.aimage(progress.tex(), bgc.adds(0, 50), 0.5, 0.0);
     }
